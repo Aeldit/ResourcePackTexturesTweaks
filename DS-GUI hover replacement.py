@@ -26,11 +26,11 @@ def main(replacements: list[tuple[int, int, int, int]], path: str, replace_posit
 
 if __name__ == "__main__":
     r = [(69, 0, 0, 255), (129, 0, 0, 255)]
-    rp_dir = ("C:/Users/rapha/AppData/Roaming/PrismLauncher/instances/1.20.2/.minecraft/"
-              "resourcepacks/Dark Smooth GUI/assets/")
+    rp_dir = ""  # Replace this with "/path/to/the/pack/assets/
 
     # Widgets
-    """minecraft/textures/gui/sprites/widget/button_highlighted.png",
+    """
+    minecraft/textures/gui/sprites/widget/button_highlighted.png",
     "minecraft/textures/gui/sprites/widget/checkbox_highlighted.png",
     "minecraft/textures/gui/sprites/widget/checkbox_selected_highlighted.png",
     "minecraft/textures/gui/sprites/widget/slider_handle_highlighted.png",
@@ -39,7 +39,8 @@ if __name__ == "__main__":
     # Enchanting table
     "minecraft/textures/gui/sprites/container/enchanting_table/enchantment_slot_highlighted.png",
     # Beacon
-    "minecraft/textures/gui/sprites/container/beacon/button_selected.png"""
+    "minecraft/textures/gui/sprites/container/beacon/button_selected.png
+    """
     vanilla_paths = [
 
         # Social interactions

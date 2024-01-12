@@ -55,7 +55,8 @@ def set_borders(index: int, ref_img: Image, new_img: Image):
 
 
 def main():
-    general_path = "C:/Users/rapha/AppData/Roaming/PrismLauncher/instances/1.20/.minecraft/resourcepacks/CTM OF Fabric/assets/minecraft/optifine/ctm/connect/organics/"
+    path_to_rp = ""  # Replace this with "absolute/path/to/the/pack/assets
+    general_path = path_to_rp + "/minecraft/optifine/ctm/connect/organics/"
 
     ref_dir = "oak/"
     # ref_dir = "stripped_oak/"
