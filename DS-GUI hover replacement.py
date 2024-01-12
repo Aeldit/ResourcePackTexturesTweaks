@@ -1,3 +1,10 @@
+"""
+Author: Aeldit <https://github.com/Aeldit>
+
+This program was made to change the color of the hover buttons across all of the textures of my Dark Smooth GUI pack.
+It replaces 2 colors by the other 2 given colors, for each given path
+"""
+
 from PIL import Image
 
 

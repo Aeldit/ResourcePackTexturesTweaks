@@ -1,3 +1,12 @@
+"""
+Author: Aeldit <https://github.com/Aeldit>
+
+This program was made to make the connected textures for each type of log :
+I made the oak type by hand using gimp.
+This program takes each different pixel of the oak type and replaces it with the colors of the current log type, then
+saves the file to the correct directory
+"""
+
 from PIL import Image
 
 
