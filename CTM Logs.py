@@ -6,11 +6,15 @@ I made the oak type by hand using gimp.
 This program takes each different pixel of the oak type and replaces it with the colors of the current log type, then
 saves the file to the correct directory
 """
+import os
+import shutil
+from os.path import isfile, join, isdir
 
 from PIL import Image
+from os import listdir
 
 
-def get_pixel(color: tuple[int, int, int], local_img):
+def get_pixel(color: tuple[int, int, int], local_img) -> tuple[int, int, int]:
     if color == (184, 148, 95, 255):
         return local_img.getpixel((1, 1))
     elif color == (126, 98, 55, 255):
@@ -27,7 +31,7 @@ def get_pixel(color: tuple[int, int, int], local_img):
         return color
 
 
-def set_borders(index: int, ref_img: Image, new_img: Image):
+def set_borders(index: int, ref_img: Image, new_img: Image) -> None:
     if index in [1, 2, 3, 4, 5, 7, 12, 13, 14, 15, 29, 31]:
         for i in range(16):
             new_img.putpixel((i, 0), ref_img.getpixel((i, 0)))
@@ -63,17 +67,60 @@ def set_borders(index: int, ref_img: Image, new_img: Image):
     return None
 
 
-def main():
-    path_to_rp = ""  # Replace this with "absolute/path/to/the/pack/assets
-    general_path = path_to_rp + "/minecraft/optifine/ctm/connect/organics/"
+def main() -> None:
+    """
+    To use the program, we have to put the basic file for each log type (the texture that will be 0.png)
+    :return: None
+    """
+    path_to_rp = "../../../Dev/MC-Resource-Packs/CTM_OF_Fabric/assets"  # Replace this with "absolute/path/to/the/pack/assets
+    # general_path = path_to_rp + "/minecraft/optifine/ctm/connect/organics/"
+    modid = "biomesoplenty"
+    general_path = path_to_rp + "/%s/optifine/ctm/connect/organics/" % modid
 
     ref_dir = "oak/"
-    # ref_dir = "stripped_oak/"
 
-    log_types = ["acacia", "birch", "cherry", "crimson", "dark_oak", "jungle", "mangrove", "spruce", "warped"]
+    # Vanilla
+    # log_types = ["acacia", "birch", "cherry", "crimson", "dark_oak", "jungle", "mangrove", "spruce", "warped"]
 
+    # Biomes O' Plenty
+    log_types = [
+        "dead", "empyreal", "fir", "hellbark", "jacaranda", "magic", "mahogany", "maple", "palm",
+        "pine", "redwood", "umbran", "willow"
+    ]
+
+    # Obtains the files that are in png format
+    only_files = [f for f in listdir(general_path) if isfile(join(general_path, f))]
+    file_to_create_dirs = []
+    for file in only_files:
+        if file.endswith(".png"):
+            file_to_create_dirs.append(file)
+
+    # Creates a directory for each png file found
+    # and moves the associated file inside the created dir (also renames the file to 0.png)
+    for file in file_to_create_dirs:
+        current_dir = general_path + file.removesuffix(".png")
+        if not os.path.isdir(current_dir):
+            os.mkdir(current_dir)
+        shutil.move(general_path + "/" + file, current_dir + "/0.png")
+
+    # Adds the stripped variant for each log type
     for a in range(len(log_types)):
         log_types.append("stripped_" + log_types[a])
+
+    # Adds the correct suffix to the files names
+    for i in range(len(log_types)):
+        log_types[i] += "_log_top"
+
+    # Creates the .properties file that will contain the ctm information
+    only_dirs = [d for d in listdir(general_path) if isdir(join(general_path, d))]
+    only_dirs.remove("oak")
+    for directory in only_dirs:
+        f = open("%s/%s.properties" % (general_path + "/" + directory, directory), "w")
+        f.write(
+            "matchBlocks=%s:%s\nmethod=ctm\ntiles=0-46\nfaces=top bottom\nconnect=tile"
+            % (modid, directory.removesuffix("_top"))
+        )
+        f.close()
 
     for log_type in log_types:
         for i in range(1, 47):
