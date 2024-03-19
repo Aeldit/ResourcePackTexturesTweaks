@@ -78,7 +78,8 @@ def main() -> None:
     modid = "biomesoplenty"
     general_path = path_to_rp + "/%s/optifine/ctm/connect/organics/" % modid
 
-    ref_dir = "oak/"
+    # The directory containing the textures used to copy the pattern
+    ref_dir = "oak"
 
     # Obtains the files that are in png format
     only_files = [f for f in listdir(general_path) if isfile(join(general_path, f))]
@@ -97,7 +98,9 @@ def main() -> None:
 
     # Creates the .properties file that will contain the ctm information
     only_dirs = [d for d in listdir(general_path) if isdir(join(general_path, d))]
-    only_dirs.remove("oak")
+    if ref_dir not in only_dirs:  # if the dir with the pattern is not present, we can't complete the program
+        return
+    only_dirs.remove(ref_dir)
     for directory in only_dirs:
         f = open("%s/%s.properties" % (general_path + "/" + directory, directory), "w")
         f.write(
@@ -109,7 +112,7 @@ def main() -> None:
     for log_type in log_types:
         for i in range(1, 47):
             # done_image = Image.open(general_path + ref_dir + str(i) + ".png")
-            done_image = Image.open("%s%s%d.png" % (general_path, ref_dir, i))
+            done_image = Image.open("%s%s/%d.png" % (general_path, ref_dir, i))
             # local_img = Image.open(general_path + log_type + "/" + "0.png")
             local_img = Image.open("%s%s/0.png" % (general_path, log_type))
             new_img = Image.new("RGBA", (16, 16))
