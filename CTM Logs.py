@@ -14,7 +14,7 @@ from PIL import Image
 from os import listdir
 
 
-def get_pixel(color: tuple[int, int, int], local_img) -> tuple[int, int, int]:
+def get_pixel(color: tuple[int, int, int], local_img: Image) -> tuple[int, int, int]:
     if color == (184, 148, 95, 255):
         return local_img.getpixel((1, 1))
     elif color == (126, 98, 55, 255):
@@ -70,46 +70,30 @@ def set_borders(index: int, ref_img: Image, new_img: Image) -> None:
 def main() -> None:
     """
     To use the program, we have to put the basic file for each log type (the texture that will be 0.png)
+    The images MUST be in RGB or RGBA mode, otherwise the outputs will be fully transparent or black
     :return: None
     """
-    path_to_rp = "../../../Dev/MC-Resource-Packs/CTM_OF_Fabric/assets"  # Replace this with "absolute/path/to/the/pack/assets
-    # general_path = path_to_rp + "/minecraft/optifine/ctm/connect/organics/"
+    # Replace this with "absolute/path/to/the/pack/assets
+    path_to_rp = "../../Dev/MC-Resource-Packs/CTM_OF_Fabric/assets"
     modid = "biomesoplenty"
     general_path = path_to_rp + "/%s/optifine/ctm/connect/organics/" % modid
 
     ref_dir = "oak/"
 
-    # Vanilla
-    # log_types = ["acacia", "birch", "cherry", "crimson", "dark_oak", "jungle", "mangrove", "spruce", "warped"]
-
-    # Biomes O' Plenty
-    log_types = [
-        "dead", "empyreal", "fir", "hellbark", "jacaranda", "magic", "mahogany", "maple", "palm",
-        "pine", "redwood", "umbran", "willow"
-    ]
-
     # Obtains the files that are in png format
     only_files = [f for f in listdir(general_path) if isfile(join(general_path, f))]
-    file_to_create_dirs = []
+    log_types = []
     for file in only_files:
         if file.endswith(".png"):
-            file_to_create_dirs.append(file)
+            log_types.append(file.removesuffix(".png"))
 
     # Creates a directory for each png file found
     # and moves the associated file inside the created dir (also renames the file to 0.png)
-    for file in file_to_create_dirs:
-        current_dir = general_path + file.removesuffix(".png")
+    for file in log_types:
+        current_dir = general_path + file
         if not os.path.isdir(current_dir):
             os.mkdir(current_dir)
-        shutil.move(general_path + "/" + file, current_dir + "/0.png")
-
-    # Adds the stripped variant for each log type
-    for a in range(len(log_types)):
-        log_types.append("stripped_" + log_types[a])
-
-    # Adds the correct suffix to the files names
-    for i in range(len(log_types)):
-        log_types[i] += "_log_top"
+        shutil.move("%s/%s.png" % (general_path, file), "%s/0.png" % current_dir)
 
     # Creates the .properties file that will contain the ctm information
     only_dirs = [d for d in listdir(general_path) if isdir(join(general_path, d))]
@@ -124,8 +108,10 @@ def main() -> None:
 
     for log_type in log_types:
         for i in range(1, 47):
-            done_image = Image.open(general_path + ref_dir + str(i) + ".png")
-            local_img = Image.open(general_path + log_type + "/" + "0.png")
+            # done_image = Image.open(general_path + ref_dir + str(i) + ".png")
+            done_image = Image.open("%s%s%d.png" % (general_path, ref_dir, i))
+            # local_img = Image.open(general_path + log_type + "/" + "0.png")
+            local_img = Image.open("%s%s/0.png" % (general_path, log_type))
             new_img = Image.new("RGBA", (16, 16))
 
             for line in range(16):
@@ -135,6 +121,7 @@ def main() -> None:
 
             new_img.save(general_path + log_type + "/" + str(i) + ".png")
             new_img.close()
+    return None
 
 
 if __name__ == "__main__":
