@@ -13,7 +13,7 @@ def main(replacements: list[tuple[int, int, int, int]], path: str, replace_posit
     size = image.size
     new_img = Image.new("RGBA", size)
     replaced = False
-    colors = [image.getpixel(replace_positions[j]) for j in range(len(replace_positions))]
+    colors = tuple(image.getpixel(replace_positions[j]) for j in range(len(replace_positions)))
 
     for line in range(size[0]):
         for column in range(size[1]):
@@ -28,6 +28,7 @@ def main(replacements: list[tuple[int, int, int, int]], path: str, replace_posit
 
     new_img.save(path)
     new_img.close()
+    image.close()
     return 0
 
 
@@ -49,7 +50,6 @@ if __name__ == "__main__":
     "minecraft/textures/gui/sprites/container/beacon/button_selected.png
     """
     vanilla_paths = [
-
         # Social interactions
         "minecraft/textures/gui/sprites/social_interactions/mute_button_highlighted.png",
         "minecraft/textures/gui/sprites/social_interactions/report_button_highlighted.png",
